@@ -1,0 +1,51 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f4f4f4;
+}
+
+/* Estilo da seção de escolha do símbolo */
+.escolha {
+    margin-bottom: 20px;
+}
+
+/* Estiliza o tabuleiro do jogo da velha */
+.tabuleiro {
+    display: grid;
+    grid-template-columns: repeat(3, 100px); /* Define uma grade de 3 colunas */
+    grid-gap: 5px; /* Espaçamento entre as células */
+    justify-content: center; /* Centraliza o tabuleiro */
+    margin: 20px auto;
+}
+
+/* Estilos das células do tabuleiro */
+.celula {
+    width: 100px;
+    height: 100px;
+    background: white;
+    border: 2px solid #333;
+    font-size: 2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+/* Efeito ao passar o mouse sobre as células */
+.celula:hover {
+    background: #ddd;
+}
+
+/* Estilos para mensagens do jogo */
+#mensagem {
+    font-size: 1.5em;
+    margin-top: 20px;
+}
+
+/* Estilo do botão de reiniciar */
+button {
+    padding: 10px 20px;
+    font-size: 1em;
+    margin-top: 10px;
+    cursor: pointer;
+}

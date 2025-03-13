@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Jogo da Velha</title>
+    <link rel="stylesheet" href="static/style.css">
+    
+
+
+    <h1>Jogo da Velha</h1>
+
+    <!-- Verifica se o jogador já escolheu um símbolo -->
+    {% if jogo.simbolo_jogador is none %}
+        <div class="escolha">
+            <h2>Escolha seu símbolo</h2>
+            <form method="post" action="/escolher_simbolo">
+                <button type="submit" name="simbolo" value="X">X</button>
+                <button type="submit" name="simbolo" value="O">O</button>
+            </form>
+        </div>
+    {% else %}
+        <!-- Exibição do tabuleiro do jogo -->
+        <div class="tabuleiro">
+            {% for i in range(9) %}
+                <div class="celula" id="celula{{ i }}" onclick="fazerJogada({{ i }})">{{ jogo.tabuleiro[i] }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Exibição da mensagem indicando o estado do jogo -->
+        <p id="mensagem">
+            {% if jogo.vencedor %}
+                {% if jogo.vencedor == "Empate" %}
+                    Empate! Reinicie o jogo.
+                {% else %}
+                    O jogador {{ jogo.vencedor }} venceu!
+                {% endif %}
+            {% else %}
+                Vez do jogador: {{ jogo.jogador_atual }}
+            {% endif %}
+        </p>
+
+        <!-- Botão para reiniciar o jogo -->
+        <button onclick="reiniciarJogo()">Reiniciar Jogo</button>
+    {% endif %}
+
+    <script>
+        // Função para enviar a jogada ao servidor Flask
+        function fazerJogada(posicao) {
+            fetch(`/jogada/${posicao}`, { method: "POST" })
+                .then(response => response.json()) // Converte a resposta em JSON
+                .then(data => {
+                    // Atualiza o tabuleiro com os novos valores
+                    document.querySelectorAll('.celula').forEach((celula, index) => {
+                        celula.textContent = data.tabuleiro[index];
+                    });
+
+                    // Atualiza a mensagem do jogo (vencedor ou próximo jogador)
+                    let mensagem = document.getElementById("mensagem");
+                    if (data.vencedor) {
+                        if (data.vencedor === "Empate") {
+                            mensagem.textContent = "Empate! Reinicie o jogo.";
+                        } else {
+                            mensagem.textContent = "O jogador " + data.vencedor + " venceu!";
+                        }
+                    } else {
+                        mensagem.textContent = "Vez do jogador: " + data.jogador_atual;
+                    }
+                });
+        }
+
+        // Função para reiniciar o jogo
+        function reiniciarJogo() {
+            window.location.href = "/reiniciar"; // Redireciona para a rota de reinício
+        }
+    </script>
+
+</body>
+</html>
